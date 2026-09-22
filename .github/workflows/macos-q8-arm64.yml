@@ -2,6 +2,7 @@ on:
   push:
     branches:
     - multiply-gamma
+    - fix-multiply-gamma
   workflow_dispatch:
 
 permissions:
@@ -43,3 +44,23 @@ jobs:
         with:
           name: macos-Q8-arm64
           path: artifacts
+
+      - name: Check out the regression test
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          repository: schnoberts1/Magick.Native.RegressionTest
+          path: regression-test
+          persist-credentials: false
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 #v6.0.0
+        with:
+          dotnet-version: 9.0.x
+
+      # Magick.NET 14.17.1 uses this repo's tag 2026.904.721.
+      - name: Run the regression test on the built library
+        run: |
+          dotnet build -p:MagickNetVersion=14.17.1 -o build
+          cp ../artifacts/Magick.Native-Q8-arm64.dll.dylib build/runtimes/osx-arm64/native/
+          dotnet build/Magick.Native.RegressionTest.dll out
+        working-directory: regression-test
