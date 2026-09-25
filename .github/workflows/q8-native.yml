@@ -23,6 +23,10 @@ jobs:
         run: ./checkout.sh --no-configure --dependencies-artifact macos-arm64-static.zip
         working-directory: src/ImageMagick
 
+      - name: Restore gamma in Multiply
+        run: git apply --verbose ../../../.github/patches/multiply-gamma.patch
+        working-directory: src/ImageMagick/ImageMagick
+
       - name: Install build tools
         run: ./install.build-tools.sh
         working-directory: build/macos-arm64
@@ -63,6 +67,10 @@ jobs:
       - name: Clone ImageMagick libraries
         run: ./checkout.sh --no-configure --dependencies-artifact linux-x64-static.zip
         working-directory: src/ImageMagick
+
+      - name: Restore gamma in Multiply
+        run: git apply --verbose ../../../.github/patches/multiply-gamma.patch
+        working-directory: src/ImageMagick/ImageMagick
 
       - name: Build ImageMagick
         run: ../../../build/shared/build.imagemagick.sh linux x64 Q8 noOpenMP

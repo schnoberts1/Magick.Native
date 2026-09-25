@@ -1,0 +1,11 @@
+--- a/MagickCore/composite.c
++++ b/MagickCore/composite.c
+@@ -3289,7 +3289,7 @@
+                 pixel=(double) QuantumRange*Sc*Dc;
+                 break;
+               }
+-            pixel=(double) QuantumRange*(Sca*Dca+Sca*(1.0-Da)+Dca*(1.0-Sa));
++            pixel=(double) QuantumRange*gamma*(Sca*Dca+Sca*(1.0-Da)+Dca*(1.0-Sa));
+             break;
+           }
+           case NegateCompositeOp:
